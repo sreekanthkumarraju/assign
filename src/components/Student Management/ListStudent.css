@@ -1,0 +1,21 @@
+#student-table{
+    border-collapse: collapse;
+    margin: auto;
+    text-align: center;
+    font-size: 18px;
+    font-family:'Times New Roman', Times, serif
+}
+#student-row,td{
+    border:1px solid black;
+}
+th{
+    font-size: 20px;
+  
+}
+tr:nth-child(even){
+    background-color:darkgrey;
+}
+
+i{
+    color: blue;
+}

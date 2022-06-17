@@ -1,0 +1,11 @@
+#create-teacher-form{
+    border:1px solid black;
+    margin:60px 120px;
+    height:fit-content;
+}
+
+.create-teacher-firstName,.create-teacher-lastName,.create-teacher-email,.create-teacher-doj,.create-teacher-salary{
+    width:450px;
+    text-align: center;
+    font-size: 20px;
+}

@@ -1,0 +1,11 @@
+.edit-teacher-form{
+    border:1px solid black;
+    margin:60px 120px;
+    height:fit-content;
+}
+
+.edit-teacher-fname,.edit-teacher-lname,.edit-teacher-email,.edit-teacher-doj,.edit-teacher-salary{
+    width:450px;
+    text-align: center;
+    font-size: 20px;
+}
