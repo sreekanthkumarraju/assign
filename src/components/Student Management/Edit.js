@@ -8,14 +8,14 @@ export default function Edit({teachers}){
 
      const {id} =useParams()
      const [students,setStudent]=useState('')
-     const [errors ,setErrors]=useState('')
+     const [errors,setErrors]=useState('')
      const [count,setCount]=useState(0)
      const navigate=useNavigate()
 
      const getStudentDetails=()=>{
          axios.get(`https://629ef6b78b939d3dc28b227c.mockapi.io/students/${id}`)
          .then((res)=>{
-             setStudent(()=>setStudent(res.data))
+             setStudent(res.data)
          })
          .catch((err)=>{
              console.log(err)

@@ -15,7 +15,7 @@ export default function EditTeacher(){
      const getStudentDetails=()=>{
          axios.get(`https://629ef6b78b939d3dc28b227c.mockapi.io/teachers/${id}`)
          .then((res)=>{
-             setTeacher(()=>setTeacher(res.data))
+             setTeacher(res.data)
          })
          .catch((err)=>{
              console.log(err)
