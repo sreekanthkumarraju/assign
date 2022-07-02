@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from 'formik';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -46,9 +46,12 @@ const validate=values =>{
 }
 
 
-export default function CreateTeacher(){
+export default function CreateTeacher({updateCount}){
 
     const navigate=useNavigate()
+
+    const [count,setCount] =useState(0)
+
     const formik=useFormik({
          
           initialValues:{
@@ -68,11 +71,14 @@ export default function CreateTeacher(){
     })
 
     const postTeacher=(values)=>{
-        axios.post('https://629ef6b78b939d3dc28b227c.mockapi.io/teachers',formik.values)
+        axios.post('http://localhost:8000/createTeacher',formik.values)
         .then((resp)=>{
             console.log(resp)
-            navigate('/teacher')
-           
+            setCount(count+1)
+            updateCount(count+1)    
+            setTimeout(()=>{
+                navigate('/teacher')
+              },[2000])
         })
         .catch((err)=>{
             console.log(err)

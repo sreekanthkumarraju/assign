@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from 'formik';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -37,15 +37,14 @@ const validate=values =>{
          if(!values.course){
             errors.course="Must select the course"
         }
-        if(!values.mentor){
-            errors.mentor="Must select the Mentor"
-        }
 
          return errors;
 }
 
-export default function CreateStudent({teachers}){
+export default function CreateStudent({updateCount}){
     const navigate=useNavigate()
+
+    const [count,setCount] =useState(0)
 
     const options=[
         {
@@ -82,8 +81,8 @@ export default function CreateStudent({teachers}){
               firstName:'',
               lastName:'',
               email:'',
-              course:'',
-              mentor:''
+              course:''
+             
           },
           validate,
           onSubmit:values=>{
@@ -94,11 +93,14 @@ export default function CreateStudent({teachers}){
     })
 
     const postStudents=(values)=>{
-        axios.post('https://629ef6b78b939d3dc28b227c.mockapi.io/students',formik.values)
+        axios.post('http://localhost:8000/createStudent',formik.values)
         .then((resp)=>{
             console.log(resp)
-            navigate('/student')
-           
+            setCount(count+1)
+            updateCount(count+1)      
+            setTimeout(()=>{
+                navigate('/student')
+              },[2000])   
         })
         .catch((err)=>{
             console.log(err)
@@ -134,22 +136,6 @@ export default function CreateStudent({teachers}){
                 </select>
                 {formik.touched.course && formik.errors.course ? <div className="text-danger fs-5">{formik.errors.course}</div> : null}
 
-
-                <label id='Assign-mentors-label'>Assign a mentor </label>
-                
-                 <select name='mentor' id='mentor' className="Assign-mentor" defaultValue={"default"} value={formik.values.option} onBlur={formik.handleBlur} onChange={formik.handleChange}>
-                  
-                   <option value={"default"} disabled>Choose an option</option>
-                     {teachers.map((teacher) => (
-                     <option value={teacher.id}>{teacher.id}</option>
-                    ))}
-                    
-                </select>
-
-                {formik.touched.mentor && formik.errors.mentor ? <div className="text-danger fs-5">{formik.errors.mentor}</div> : null}
-
-              
-                
                  <button type='submit'  className="bg-danger">Create</button>
            
             </form>

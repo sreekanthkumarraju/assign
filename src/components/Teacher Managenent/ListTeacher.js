@@ -4,40 +4,7 @@ import { Link } from "react-router-dom";
 import  './ListTeacher.css'
 
 
-export default function ListTeacher(){
-      
-     const [teachers,setTeachers]=useState([])
-     const [count,setCount]=useState(0)
-     const getStudentDetails=()=>{
-
-        axios.get('https://629ef6b78b939d3dc28b227c.mockapi.io/teachers')
-        .then((resp)=>{
-            console.log(resp.data)
-            setTeachers(resp.data)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-
-     }
-
-     const handleDelete=(id)=>{
-
-           axios.delete(`https://629ef6b78b939d3dc28b227c.mockapi.io/teachers/${id}`) 
-           .then((res)=>{
-               console.log(res)
-               setCount(count+1)
-           })
-           .catch((err)=>{
-               console.log(err)
-           })
-     }
-
-      useEffect(()=>{
-
-        getStudentDetails()
-         
-      },[count])
+export default function ListTeacher({teachers}){
 
     return(
        
@@ -50,11 +17,12 @@ export default function ListTeacher(){
                 </div>
             </nav>
         <div>
+            <p className="fs-4 text-primary">List of Mentors</p>
              <table id='teacher-table'>
                      <thead>
                          <tr id='teacher-row'>
                              <td>
-                               <th>S.No</th>
+                               <th>Teacher Id</th>
                              </td>
 
                              <td>
@@ -78,7 +46,11 @@ export default function ListTeacher(){
                              </td> 
 
                              <td>
-                              <th>Actions</th>
+                              <th>Assign Students</th>
+                             </td> 
+
+                             <td>
+                               <th> Student List</th>
                              </td> 
                             
                          </tr>
@@ -87,10 +59,10 @@ export default function ListTeacher(){
                     <tbody>
                        
             {
-                teachers.map((teacher)=>{
+                teachers.map((teacher,index)=>{
                      return(
                         <tr id='teacher-row'>
-                            <td>{teacher.id}</td>
+                            <td>{teacher.TeacherId}</td>
                             <td>{teacher.firstName}</td>
                             <td>{teacher.lastName}</td>
                             <td>{teacher.email}</td>
@@ -98,17 +70,18 @@ export default function ListTeacher(){
                             <td>{teacher.salary}</td>
                             
                             <td>
-                             <Link  to={`teacher-profile/${teacher.id}`}>
-                                <span><i class="fa-solid fa-eye fa-fw"></i></span>
-                             </Link> 
-
-                             <Link  to={`edit-teacher/${teacher.id}`}>
+                            
+                             <Link  to={`assignStudents/${teacher._id}`}>
                                  <i class="fa-solid fa-pen fa-fw"></i>
                              </Link>
 
-                                <i class="fa-solid fa-trash-can fa-fw"  onClick={()=>handleDelete(teacher.id)}></i>
-
                             </td>
+
+                            <td>
+                             <Link  to={`studentlist/${teacher.TeacherId}`}>
+                                <span><i class="fa-solid fa-eye fa-fw"></i></span>
+                             </Link> 
+                             </td>
                         </tr>                        
                      )
                 })

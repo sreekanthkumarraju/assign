@@ -2,50 +2,89 @@ import React,{useState,useEffect} from "react";
 import axios from 'axios'
 import {Routes,Route} from 'react-router-dom'
 import CreateStudent from "./components/Student Management/CreateStudent";
-import Edit from "./components/Student Management/Edit";
+import AssignMentor from "./components/Student Management/AssignMentor";
 import ListStudents from "./components/Student Management/ListStudents";
-import Profile from "./components/Student Management/Profile";
 import CreateTeacher from "./components/Teacher Managenent/CreateTeacher";
-import EditTeacher from "./components/Teacher Managenent/EditTeacher";
+import AssignStudents from "./components/Teacher Managenent/AssignStudents";
 import ListTeacher from "./components/Teacher Managenent/ListTeacher";
-import TeacherProfile from "./components/Teacher Managenent/TeacherProfile";
+import StudentList from "./components/Teacher Managenent/StudentList";
+
 
 export default function Body(){
-
-
-    const [teachers,setTeachers]=useState([])
   
-    const getTeacherDetails=()=>{
+    const [students,setStudent]=useState({})
 
-       axios.get('https://629ef6b78b939d3dc28b227c.mockapi.io/teachers')
-       .then((resp)=>{
-           console.log(resp.data)
-           setTeachers(resp.data)
-       })
-       .catch((err)=>{
-           console.log(err)
-       })
+    const [teachers,setTeachers]=useState('')
 
+    const [count,setCount]=useState(0)
+  
+    const getStudents=()=>{
+        axios.get('http://localhost:8000/createStudent')
+        .then((res)=>{
+            console.log(res.data)
+            setStudent(res.data)
+          
+        })
+        .catch((err)=>{
+            console.log(err)
+    
+        })
     }
-    console.log(teachers)
 
-    useEffect(()=>{
-         getTeacherDetails()
-      },[])
-        
-    return(
+
+    const getTeachers=()=>{
+        axios.get('http://localhost:8000/createTeacher')
+        .then((res)=>{
+            console.log(res.data)
+            setTeachers(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+
+    const teacherDetails= (teachers,id)=>{
+        for(let i in teachers)
+        {
+            let students=teachers[i].students
+             for(let j in students)
+              {
+                  if(students[j]===parseInt(id))
+                   {
+                       return(
+                           { 'label':teachers[i].TeacherId,'value':teachers[i]}
+                       )
+                     
+                   }
+              }
+         }
+     }
+     const updateCount=(value)=>{
+         setCount(value)
+         console.log(count)
+     }
+
+     useEffect(()=>{
+         getStudents()
+         getTeachers()
+          console.log(students)
+          console.log(teachers)
+     },[count])
+     
+     return(
         <div>
 
           <Routes>
-
-              <Route path='student' element={<ListStudents/>}> </Route>
-              <Route path='/student/create-student' element={<CreateStudent teachers={teachers} />}></Route>
-              <Route path='/student/profile/:id' element={<Profile teachers={teachers}/>}></Route>
-              <Route path="/student/edit/:id" element={<Edit teachers={teachers}/>}></Route>
-              <Route path='teacher' element={<ListTeacher/>}> </Route>           
-              <Route path='/teacher/create-teacher' element={<CreateTeacher/>}></Route>
-              <Route path='/teacher/teacher-profile/:id' element={<TeacherProfile/>}></Route>
-              <Route path='/teacher/edit-teacher/:id' element={<EditTeacher/>}></Route>
+              
+              <Route path='student' element={<ListStudents students={students}/>}> </Route>
+              <Route path='/student/create-student' element={<CreateStudent teachers={teachers}  updateCount={updateCount}/>}></Route>
+               {/* <Route path='/student/assign-mentor'  element={(teachers && students) ?<AssignMentor teachers={teachers} students={students}/>:null}></Route>  */}
+             
+              <Route path="/student/assignmentor/:id" element={<AssignMentor teachers={teachers} updateCount={updateCount} teacherDetails={teacherDetails}/>}></Route>
+              <Route path='teacher' element={<ListTeacher teachers={teachers}/>}> </Route>           
+              <Route path='/teacher/create-teacher' element={<CreateTeacher  updateCount={updateCount}/>}></Route>
+              <Route path='/teacher/studentlist/:id' element={<StudentList/>}></Route>
+              <Route path='/teacher/assignStudents/:id' element={<AssignStudents students={students} Allteachers={teachers} updateCount={updateCount}/>}></Route>
                  
           </Routes> 
         
